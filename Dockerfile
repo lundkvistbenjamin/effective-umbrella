@@ -11,6 +11,9 @@ COPY prisma ./prisma/
 # Install dependencies
 RUN npm install
 
+# TESTING PURPOSES
+RUN npx prisma migrate dev --name fix_column_names
+
 # Generate Prisma client
 RUN npx prisma generate
 

@@ -1,0 +1,29 @@
+@apiURL=
+
+### Hämta alla produkter
+GET {{apiURL}}products
+
+### Hämta en specifik produkt
+GET {{apiURL}}products/{sku}
+
+### Lägg till en ny produkt
+POST {{apiURL}}products
+
+{
+    "sku": "789-GHI",
+    "name": "IPA",
+    "price": 64.99,
+    "description": "En kraftig och humlearomatisk IPA.",
+    "image": "path-to-image"
+}
+
+### Uppdatera en produkt
+PUT {{apiURL}}products/{sku}
+
+{
+    "name": "Pale Ale Special Edition",
+    "price": 69.99
+}
+
+### Ta bort en produkt
+DELETE {{apiURL}}products/{sku}
