@@ -1,9 +1,17 @@
 const express = require('express');
-const app = express();
+const cors = require('cors');
 require('dotenv').config();
+
+const app = express();
 const PORT = process.env.PORT || 8080;
 
 console.log(`Node.js ${process.version}`);
+
+app.use(cors({
+    origin: process.env.MODE === "development"
+        ? "*"
+        : "https://effective-umbrella-cna-product-service.2.rahtiapp.fi"
+}));
 
 app.use(express.json());
 
