@@ -8,12 +8,12 @@ datasource db {
 }
 
 model Product {
-  id          Int       @id @default(autoincrement()) 
+  id          Int       @id @default(autoincrement())
   sku         String    @db.VarChar
   name        String    @db.VarChar
-  price       Float     // Numeric type in PostgreSQL maps to Float in Prisma
+  price       Float
   description String?   @db.VarChar
-  createdAt   DateTime  @default(now()) @db.Timestamptz
-  updatedAt   DateTime  @updatedAt @db.Timestamptz
+  createdAt   DateTime  @default(now()) @db.Timestamptz @map("created_at")
+  updatedAt   DateTime  @updatedAt @db.Timestamptz @map("updated_at")
   image       String?   @db.VarChar
 }
