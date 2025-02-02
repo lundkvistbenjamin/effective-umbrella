@@ -1,23 +1,23 @@
 {
-  "name": "rahti2-docker-node",
+  "name": "product-service",
   "version": "1.0.0",
   "description": "Note: OpenShift wants the main branch to be named *master* by default, you have two options:\r 1. Push to origin/master to deploy\r 2. Change the setting in Openshift to *main*:    \r     Edit BuildConfig ==> Show advanced git options ==> Git reference: `main`",
   "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx prisma generate && node src/server.js",
-    "dev": "npx prisma generate && nodemon -L src/server.js"
+    "start": "node src/server.js",
+    "dev": "nodemon -L src/server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fw-teaching/rahti2-docker-node.git"
+    "url": "git+https://github.com/CNA-25/product-service.git"
   },
-  "author": "",
+  "author": "Benjamin, Kevin, Dennis",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/fw-teaching/rahti2-docker-node/issues"
+    "url": "https://github.com/CNA-25/product-service/issues"
   },
-  "homepage": "https://github.com/fw-teaching/rahti2-docker-node#readme",
+  "homepage": "https://github.com/CNA-25/product-service#readme",
   "dependencies": {
     "@prisma/client": "^6.3.0",
     "dotenv": "^16.4.7",

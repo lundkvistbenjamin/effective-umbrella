@@ -4,18 +4,27 @@ FROM node:22
 # Create and change to the app directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy only package files first for better layer caching
 COPY package*.json ./
+COPY prisma ./prisma/
 
-# Install the app dependencies
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code to the working directory
+# Generate Prisma client
+RUN npx prisma generate
+
+# Copy the rest of the application code
 COPY . .
+
+# Set correct permissions before switching users
+RUN chown -R node:node /app
+
+# Use a non-root user (important for OpenShift/Rahti 2)
+USER node
 
 # Expose the port the app runs on
 EXPOSE 8080
 
-# Define the command to run the app
+# Run the app
 CMD ["sh", "-c", "if [ \"$MODE\" = 'development' ]; then npm run dev; else npm start; fi"]
-
