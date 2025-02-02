@@ -8,10 +8,11 @@ const PORT = process.env.PORT || 8080;
 console.log(`Node.js ${process.version}`);
 
 app.use(cors({
-    origin: process.env.MODE === "development"
-        ? "*"
-        : "https://effective-umbrella-cna-product-service.2.rahtiapp.fi"
+    origin: [
+        "http://127.0.0.1:5500"
+    ]
 }));
+
 
 app.use(express.json());
 
