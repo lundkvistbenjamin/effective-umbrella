@@ -1,4 +1,4 @@
-@apiURL=https://effective-umbrella-cna-product-service.2.rahtiapp.fi/
+@apiURL=
 
 ### Hämta alla produkter
 GET {{apiURL}}products
