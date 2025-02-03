@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Ensure correct permissions for OpenShift (Writable node_modules & Prisma)
+RUN chmod -R 777 /app/node_modules /app/prisma
+
 # Copy Prisma schema & migrations
 COPY prisma ./prisma/
 
@@ -18,9 +21,6 @@ RUN npx prisma generate
 
 # Copy the rest of the application code
 COPY . .
-
-# Ensure correct permissions for OpenShift (Writable Prisma)
-RUN chmod -R 777 /app/prisma
 
 # Expose app port
 EXPOSE 8080
