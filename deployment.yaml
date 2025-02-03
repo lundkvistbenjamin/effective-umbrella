@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service  # Name of your deployment
+spec:
+  replicas: 1  # Number of pods to run
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      securityContext:
+        fsGroup: 2000  # Allows OpenShift user to write to mounted directories
+      containers:
+        - name: product-service-container
+          image: my-dockerhub-username/product-service:latest  # Replace with your image
+          imagePullPolicy: Always  # Ensures latest image is pulled
+          ports:
+            - containerPort: 8080  # Matches your Dockerfile EXPOSE port
+          env:
+            - name: MODE
+              value: "production"  # Set environment mode
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: product-service-secret
+                  key: DATABASE_URL  # Read from OpenShift Secrets
+          volumeMounts:
+            - name: prisma-storage
+              mountPath: /app/prisma  # Ensures Prisma schema is writable
+      volumes:
+        - name: prisma-storage
+          emptyDir: {}  # Temporary volume (you can use PersistentVolumeClaim instead)
