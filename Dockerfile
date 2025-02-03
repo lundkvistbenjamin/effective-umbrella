@@ -13,14 +13,15 @@ RUN npm install
 # Copy Prisma schema & migrations **before chmod**
 COPY prisma ./prisma/
 
+# Copy the rest of the application code
+COPY . .
+
 # Ensure correct permissions for OpenShift (Writable node_modules & Prisma)
-RUN chmod -R 777 /app/node_modules /app/prisma
+RUN chmod -R 777 /app/node_modules/.prisma/client/schema.prisma
+RUN chmod -R 777 /app/prisma
 
 # Generate Prisma client
 RUN npx prisma generate
-
-# Copy the rest of the application code
-COPY . .
 
 # Expose app port
 EXPOSE 8080
