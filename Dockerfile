@@ -17,7 +17,7 @@ COPY . .
 
 # Run as user node (not root)
 RUN chown -R node:node /app
-RUN chmod -R 777 /app/node_modules/.prisma/client
+RUN chown -R node:node node_modules/.prisma
 USER node
 
 # Expose the port the app runs on
