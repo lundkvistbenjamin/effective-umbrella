@@ -18,7 +18,7 @@ COPY . .
 
 # Ensure correct permissions for OpenShift (Writable Prisma)
 RUN chmod -R 777 /app/prisma
-RUN chmod -R 777 /app/node_modules/.prisma/client/schema.prisma
+RUN chmod -R 777 /app/node_modules/.prisma/client
 
 # Generate Prisma client
 RUN npx prisma generate
