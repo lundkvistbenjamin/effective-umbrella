@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 // Get all products
 router.get('/', async (req, res) => {
     try {
-        const products = await prisma.product.findMany();
+        const products = await prisma.products.findMany();
         res.json(products);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -16,7 +16,7 @@ router.get('/', async (req, res) => {
 // Get a single product by ID
 router.get('/:id', async (req, res) => {
     try {
-        const product = await prisma.product.findUnique({
+        const product = await prisma.products.findUnique({
             where: { id: parseInt(req.params.id) },
         });
         if (product) {
@@ -32,8 +32,15 @@ router.get('/:id', async (req, res) => {
 // Create a new product
 router.post('/', async (req, res) => {
     try {
-        const product = await prisma.product.create({
-            data: req.body,
+        const { sku, name, price, description, image } = req.body;
+        const product = await prisma.products.create({
+            data: {
+                sku,
+                name,
+                price,
+                description,
+                image,
+            },
         });
         res.status(201).json(product);
     } catch (error) {
@@ -44,9 +51,17 @@ router.post('/', async (req, res) => {
 // Update a product by ID
 router.put('/:id', async (req, res) => {
     try {
-        const product = await prisma.product.update({
+        const { sku, name, price, description, image } = req.body;
+        const product = await prisma.products.update({
             where: { id: parseInt(req.params.id) },
-            data: req.body,
+            data: {
+                sku,
+                name,
+                price,
+                description,
+                image,
+                updated_at: new Date(), // Update timestamp manually
+            },
         });
         res.json(product);
     } catch (error) {
@@ -57,7 +72,7 @@ router.put('/:id', async (req, res) => {
 // Delete a product by ID
 router.delete('/:id', async (req, res) => {
     try {
-        await prisma.product.delete({
+        await prisma.products.delete({
             where: { id: parseInt(req.params.id) },
         });
         res.status(204).send();
