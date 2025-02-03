@@ -1,27 +1,29 @@
-# Use the official Node.js image from the Docker Hub as the base image
+# Use official Node.js image
 FROM node:22
 
-# Create and change to the app directory
+# Set working directory
 WORKDIR /app
 
-# Copy only package files first for better layer caching
+# Copy package files first (improves caching)
 COPY package*.json ./
-COPY prisma ./prisma/
 
 # Install dependencies
 RUN npm install
-RUN npm install -g @prisma/client
+
+# Copy Prisma schema & migrations
+COPY prisma ./prisma/
+
+# Generate Prisma client
+RUN npx prisma generate
 
 # Copy the rest of the application code
 COPY . .
 
-# Run as user node (not root)
-RUN chown -R node:node /app
-RUN chown -R node:node node_modules/.prisma
-USER node
+# Ensure correct permissions for OpenShift (Writable Prisma)
+RUN chmod -R 777 /app/prisma
 
-# Expose the port the app runs on
+# Expose app port
 EXPOSE 8080
 
-# Run the app
+# Run the app with environment-based start command
 CMD ["sh", "-c", "if [ \"$MODE\" = 'development' ]; then npm run dev; else npm start; fi"]
