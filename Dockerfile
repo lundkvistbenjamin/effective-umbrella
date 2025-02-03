@@ -10,18 +10,14 @@ COPY prisma ./prisma/
 
 # Install dependencies
 RUN npm install
-
-# Generate Prisma client
-RUN npx prisma db pull
-RUN npx prisma generate
+RUN npm install -g @prisma/client
 
 # Copy the rest of the application code
 COPY . .
 
-# Set correct permissions before switching users
+# Run as user node (not root)
 RUN chown -R node:node /app
-
-# Use a non-root user (important for OpenShift/Rahti 2)
+RUN chmod -R 777 /app/node_modules/.prisma/client
 USER node
 
 # Expose the port the app runs on
