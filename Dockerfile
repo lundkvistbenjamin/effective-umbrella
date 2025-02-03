@@ -10,11 +10,11 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Copy Prisma schema & migrations **before chmod**
+COPY prisma ./prisma/
+
 # Ensure correct permissions for OpenShift (Writable node_modules & Prisma)
 RUN chmod -R 777 /app/node_modules /app/prisma
-
-# Copy Prisma schema & migrations
-COPY prisma ./prisma/
 
 # Generate Prisma client
 RUN npx prisma generate
