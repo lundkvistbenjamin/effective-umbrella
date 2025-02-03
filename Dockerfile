@@ -17,13 +17,12 @@ COPY prisma ./prisma/
 COPY . .
 
 # Ensure correct permissions for OpenShift (Writable Prisma)
-#RUN chmod -R 777 /app/prisma
+RUN chmod -R 777 /app/prisma
+RUN chmod -R 777 /app/node_modules/.prisma/
+RUN chmod -R 777 /app/node_modules/prisma
 
 # Generate Prisma client
-#RUN npx prisma generate
-
-# Ensure the generated Prisma client is writable
-#RUN chmod -R 777 /app/node_modules/.prisma/
+RUN npx prisma generate
 
 # Expose app port
 EXPOSE 8080
