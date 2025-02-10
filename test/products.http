@@ -1,13 +1,18 @@
 @apiURL=
 
-### Hämta alla produkter
+
+### Hämta alla produkter (Require Auth)
 GET {{apiURL}}products
+Authorization: {{authToken}}
 
-### Hämta en specifik produkt
+### Hämta en specifik produkt (Require Auth)
 GET {{apiURL}}products/{sku}
+Authorization: {{authToken}}
 
-### Lägg till en ny produkt
+### Lägg till en ny produkt (Require Auth)
 POST {{apiURL}}products
+Authorization: {{authToken}}
+Content-Type: application/json
 
 {
     "sku": "789-GHI",
@@ -17,13 +22,16 @@ POST {{apiURL}}products
     "image": "path-to-image"
 }
 
-### Uppdatera en produkt
+### Uppdatera en produkt (Require Auth)
 PUT {{apiURL}}products/{sku}
+Authorization: {{authToken}}
+Content-Type: application/json
 
 {
     "name": "Pale Ale Special Edition",
     "price": 69.99
 }
 
-### Ta bort en produkt
+### Ta bort en produkt (Require Auth)
 DELETE {{apiURL}}products/{sku}
+Authorization: {{authToken}}

@@ -1,10 +1,12 @@
 const express = require('express');
-const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
+const authorize = require('../middleware/auth'); // Import authentication middleware
+
+const router = express.Router();
 const prisma = new PrismaClient();
 
-// Get all products
-router.get('/', async (req, res) => {
+// Get all products (Protected)
+router.get('/', authorize, async (req, res) => {
     try {
         const products = await prisma.products.findMany();
         res.json(products);
@@ -13,8 +15,8 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Get a single product by ID
-router.get('/:id', async (req, res) => {
+// Get a single product by ID (Protected)
+router.get('/:id', authorize, async (req, res) => {
     try {
         const product = await prisma.products.findUnique({
             where: { id: parseInt(req.params.id) },
@@ -29,8 +31,8 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// Create a new product
-router.post('/', async (req, res) => {
+// Create a new product (Protected)
+router.post('/', authorize, async (req, res) => {
     try {
         const { sku, name, price, description, image } = req.body;
         const product = await prisma.products.create({
@@ -48,8 +50,8 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Update a product by ID
-router.put('/:id', async (req, res) => {
+// Update a product by ID (Protected)
+router.put('/:id', authorize, async (req, res) => {
     try {
         const { sku, name, price, description, image } = req.body;
         const product = await prisma.products.update({
@@ -60,7 +62,7 @@ router.put('/:id', async (req, res) => {
                 price,
                 description,
                 image,
-                updated_at: new Date(), // Update timestamp manually
+                updated_at: new Date(),
             },
         });
         res.json(product);
@@ -69,8 +71,8 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// Delete a product by ID
-router.delete('/:id', async (req, res) => {
+// Delete a product by ID (Protected)
+router.delete('/:id', authorize, async (req, res) => {
     try {
         await prisma.products.delete({
             where: { id: parseInt(req.params.id) },
