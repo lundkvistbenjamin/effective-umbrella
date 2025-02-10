@@ -1,4 +1,4 @@
-@apiURL=https://effective-umbrella-cna-product-service.2.rahtiapp.fi/
+@apiURL={{$dotenv API_URL}}
 @authToken={{$dotenv TEMP_TOKEN}}
 
 
