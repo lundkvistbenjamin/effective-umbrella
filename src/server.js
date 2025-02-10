@@ -13,16 +13,16 @@ app.use(cors({
     ]
 }));
 
+app.get("/", (req, res) => {
+    console.log(req.myVar);
+    res.send("<h1>Hello!!!</h1>");
+});
 
 app.use(express.json());
 
 // Import the products route
 const productsRouter = require('./routes/products');
 app.use('/products', productsRouter);
-
-app.get('/', (req, res) => {
-    res.json({ msg: "Hej Kevin" });
-});
 
 app.listen(PORT, () => {
     try {
