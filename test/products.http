@@ -1,5 +1,6 @@
-@apiURL=
+@apiURL=https://effective-umbrella-cna-product-service.2.rahtiapp.fi/
 
+@authToken=Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTczOTE3NTEzMywiZXhwIjoxNzQ0MzU5MTMzfQ.Vt2TlKYgM4oOcqJsno6cV5kXp8d9-dtts3pZb5_B0SU
 
 ### Hämta alla produkter (Require Auth)
 GET {{apiURL}}products
