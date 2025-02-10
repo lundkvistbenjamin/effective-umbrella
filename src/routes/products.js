@@ -9,9 +9,9 @@ const prisma = new PrismaClient();
 router.get('/', authorize, async (req, res) => {
     try {
         const products = await prisma.products.findMany();
-        res.json(products);
+        res.status(200).json({ msg: "Products fetched successfully", products });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ msg: "Error fetching products", error: error.message });
     }
 });
 
@@ -22,12 +22,12 @@ router.get('/:id', authorize, async (req, res) => {
             where: { id: parseInt(req.params.id) },
         });
         if (product) {
-            res.json(product);
+            res.status(200).json({ msg: "Product fetched successfully", product });
         } else {
-            res.status(404).json({ message: 'Product not found' });
+            res.status(404).json({ msg: "Product not found" });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ msg: "Error fetching product", error: error.message });
     }
 });
 
@@ -44,9 +44,9 @@ router.post('/', authorize, async (req, res) => {
                 image,
             },
         });
-        res.status(201).json(product);
+        res.status(201).json({ msg: "New product created!", product });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ msg: "Error creating product", error: error.message });
     }
 });
 
@@ -65,9 +65,9 @@ router.put('/:id', authorize, async (req, res) => {
                 updated_at: new Date(),
             },
         });
-        res.json(product);
+        res.status(200).json({ msg: "Product updated successfully", product });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ msg: "Error updating product", error: error.message });
     }
 });
 
@@ -77,9 +77,9 @@ router.delete('/:id', authorize, async (req, res) => {
         await prisma.products.delete({
             where: { id: parseInt(req.params.id) },
         });
-        res.status(204).send();
+        res.status(204).json({ msg: "Product deleted successfully" });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ msg: "Error deleting product", error: error.message });
     }
 });
 

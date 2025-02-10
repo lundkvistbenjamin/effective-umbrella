@@ -1,8 +1,6 @@
 @apiURL={{$dotenv API_URL}}
 @authToken={{$dotenv TEMP_TOKEN}}
 
-
-
 ### Hämta alla produkter (Require Auth)
 GET {{apiURL}}products
 Authorization: Bearer {{authToken}}
@@ -17,15 +15,15 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-    "sku": "789-GHI",
+    "sku": "785-GFI",
     "name": "IPA",
-    "price": 64.99,
+    "price": 62.99,
     "description": "En kraftig och humlearomatisk IPA.",
     "image": "path-to-image"
 }
 
 ### Uppdatera en produkt (Require Auth)
-PUT {{apiURL}}products/{sku}
+PUT {{apiURL}}products/{id}
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
@@ -35,5 +33,5 @@ Content-Type: application/json
 }
 
 ### Ta bort en produkt (Require Auth)
-DELETE {{apiURL}}products/{sku}
+DELETE {{apiURL}}products/{id}
 Authorization: Bearer {{authToken}}
