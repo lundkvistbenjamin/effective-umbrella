@@ -9,7 +9,7 @@ console.log(`Node.js ${process.version}`);
 
 app.use(cors({
     origin: [
-        "http://127.0.0.1:5500"
+        "http://127.0.0.1:5500" // Update as necessary for frontend
     ]
 }));
 
@@ -19,6 +19,9 @@ app.get("/", (req, res) => {
 });
 
 app.use(express.json());
+
+// Serve uploaded images as static files from the persistent volume mounted at /app/uploads
+app.use('/uploads', express.static('/app/uploads'));
 
 // Import the products route
 const productsRouter = require('./routes/products');

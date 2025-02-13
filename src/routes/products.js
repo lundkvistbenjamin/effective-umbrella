@@ -1,9 +1,19 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
+const multer = require('multer'); // Import multer for image upload
 const authorize = require('../middleware/auth'); // Import authentication middleware
 
 const router = express.Router();
 const prisma = new PrismaClient();
+
+// Setup multer to store files in the persistent volume mounted at `/app/uploads`
+const uploadDir = '/app/uploads'; // This is where the images will be stored
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, uploadDir),
+    filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname),
+});
+
+const upload = multer({ storage }); // Create upload middleware
 
 // Get all products (Protected)
 router.get('/', authorize, async (req, res) => {
@@ -15,11 +25,11 @@ router.get('/', authorize, async (req, res) => {
     }
 });
 
-// Get a single product by ID (Protected)
-router.get('/:id', authorize, async (req, res) => {
+// Get a single product by SKU (Protected)
+router.get('/:sku', authorize, async (req, res) => {
     try {
         const product = await prisma.products.findUnique({
-            where: { id: parseInt(req.params.id) },
+            where: { sku: req.params.sku },
         });
         if (product) {
             res.status(200).json({ msg: "Product fetched successfully", product });
@@ -31,51 +41,55 @@ router.get('/:id', authorize, async (req, res) => {
     }
 });
 
-// Create a new product (Protected)
-router.post('/', authorize, async (req, res) => {
+// Create a new product with image upload
+router.post('/', authorize, upload.single('image'), async (req, res) => {
     try {
-        const { sku, name, price, description, image } = req.body;
+        const { sku, name, price, description } = req.body;
+        const imagePath = req.file ? `/uploads/${req.file.filename}` : null; // Set image path if uploaded
+
         const product = await prisma.products.create({
             data: {
                 sku,
                 name,
                 price,
                 description,
-                image,
+                image: imagePath, // Save the image path
             },
         });
+
         res.status(201).json({ msg: "New product created!", product });
     } catch (error) {
         res.status(400).json({ msg: "Error creating product", error: error.message });
     }
 });
 
-// Update a product by ID (Protected)
-router.put('/:id', authorize, async (req, res) => {
+// Update a product by SKU (Protected)
+router.put('/:sku', authorize, upload.single('image'), async (req, res) => {
     try {
-        const { sku, name, price, description, image } = req.body;
+        const { sku, name, price, description } = req.body;
+        const data = { sku, name, price, description, updated_at: new Date() };
+
+        // Update image only if a new file is uploaded
+        if (req.file) {
+            data.image = `/uploads/${req.file.filename}`; // Set new image path if uploaded
+        }
+
         const product = await prisma.products.update({
-            where: { id: parseInt(req.params.id) },
-            data: {
-                sku,
-                name,
-                price,
-                description,
-                image,
-                updated_at: new Date(),
-            },
+            where: { sku: req.params.sku }, // Use SKU for unique identification
+            data,
         });
+
         res.status(200).json({ msg: "Product updated successfully", product });
     } catch (error) {
         res.status(400).json({ msg: "Error updating product", error: error.message });
     }
 });
 
-// Delete a product by ID (Protected)
-router.delete('/:id', authorize, async (req, res) => {
+// Delete a product by SKU (Protected)
+router.delete('/:sku', authorize, async (req, res) => {
     try {
         await prisma.products.delete({
-            where: { id: parseInt(req.params.id) },
+            where: { sku: req.params.sku },
         });
         res.status(204).send();
     } catch (error) {
