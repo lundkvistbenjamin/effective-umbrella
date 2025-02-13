@@ -8,10 +8,8 @@ const PORT = process.env.PORT || 8080;
 // Use CORS to allow all origins
 app.use(cors());
 
-// Middleware to parse JSON bodies
 app.use(express.json());
 
-// Example route
 app.get("/", (req, res) => {
     res.send("<h1>Hello!!!</h1>");
 });
