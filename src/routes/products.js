@@ -1,19 +1,10 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
-const multer = require("multer");
+const upload = require("../middleware/upload");  // Import the upload middleware
 const authorize = require("../middleware/auth");
 
 const router = express.Router();
 const prisma = new PrismaClient();
-
-// Setup multer to store files in the persistent volume mounted at "/app/uploads"
-const uploadDir = "/app/uploads";
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => cb(null, uploadDir),
-    filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname),
-});
-
-const upload = multer({ storage }); // Create upload middleware
 
 // Get all products
 router.get("/", authorize, async (req, res) => {
