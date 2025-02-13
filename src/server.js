@@ -11,13 +11,13 @@ app.use(cors());
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Serve uploaded images as static files
-app.use('/uploads', express.static('/app/uploads'));
-
 // Example route
 app.get("/", (req, res) => {
     res.send("<h1>Hello!!!</h1>");
 });
+
+// Serve uploaded images as static files
+app.use('/uploads', express.static('/app/uploads'));
 
 // Import the products route
 const productsRouter = require('./routes/products');
