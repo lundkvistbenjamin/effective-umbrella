@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-backend
+  template:
+    metadata:
+      labels:
+        app: product-backend
+    spec:
+      containers:
+      - name: product-backend
+        image: your-image-name:latest
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: product-images
+          mountPath: /app/uploads
+      volumes:
+      - name: product-images
+        persistentVolumeClaim:
+          claimName: product-images-pvc

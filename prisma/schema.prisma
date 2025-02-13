@@ -9,7 +9,7 @@ datasource db {
 
 model products {
   id          Int       @id @default(autoincrement())
-  sku         String    @db.VarChar
+  sku         String    @unique @db.VarChar
   name        String    @db.VarChar
   price       Decimal   @db.Decimal
   description String?   @db.VarChar
