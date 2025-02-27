@@ -272,7 +272,7 @@ router.delete("/:sku", authorizeAdmin, async (req, res) => {
             productCode: sku
         }];
 
-        console.log(req.userData.token);
+        console.log("Inside delete token: " + req.userData.token);
 
         const inventoryResponse = await fetch(`https://inventory-service-inventory-service.2.rahtiapp.fi/inventory/`, {
             method: "DELETE",
