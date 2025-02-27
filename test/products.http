@@ -35,3 +35,12 @@ Content-Type: application/json
 ### Ta bort en produkt (Require Auth)
 DELETE {{apiURL}}products/10000-MXL
 Authorization: Bearer {{authToken}}
+
+###
+
+POST {{apiURL}}products/batch
+Content-Type: application/json
+
+{
+    "product_codes": ["10000-FIL", "10000-IES"]
+}
