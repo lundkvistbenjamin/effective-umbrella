@@ -12,7 +12,7 @@ const options = {
         },
         servers: [
             {
-                url: "https://product-service-cna-product-service.2.rahtiapp.fi/",
+                url: "https://effective-umbrella-cna-product-service.2.rahtiapp.fi/",
                 description: "Environment-based API URL",
             },
         ],

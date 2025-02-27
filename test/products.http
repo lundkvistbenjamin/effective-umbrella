@@ -24,13 +24,12 @@ Content-Type: application/json
 }
 
 ### Uppdatera en produkt (Require Auth)
-PUT {{apiURL}}products/10000-FIL
+PUT {{apiURL}}products/10000-MXL
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-    "name": "Pale Ale Special Edition",
-    "price": 69.99
+    "price": 3
 }
 
 ### Ta bort en produkt (Require Auth)
