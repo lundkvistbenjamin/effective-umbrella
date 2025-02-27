@@ -278,7 +278,7 @@ router.delete("/:sku", authorizeAdmin, async (req, res) => {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${req.userData.token}`
+                "Authorization": `${req.userData.token}`
             },
             body: JSON.stringify(delData)
         });
