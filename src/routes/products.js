@@ -260,38 +260,42 @@ router.put("/:sku", authorizeAdmin, upload.single("image"), async (req, res) => 
  *         description: Product deleted
  */
 router.delete("/:sku", authorizeAdmin, async (req, res) => {
+    const { sku } = req.params;
+
+    const delData = [{ productCode: sku }];
+
+    console.log("Inside delete token: " + req.userData.token);
+
     try {
+        await prisma.$transaction(async (tx) => {
+            // Delete product from the database
+            await tx.products.delete({
+                where: { sku },
+            });
 
-        const { sku } = req.params;
+            // Delete from inventory
+            const inventoryResponse = await fetch("https://inventory-service-inventory-service.2.rahtiapp.fi/inventory/", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${req.userData.token}`
+                },
+                body: JSON.stringify(delData)
+            });
 
-        await prisma.products.delete({
-            where: { sku },
+            if (!inventoryResponse.ok) {
+                const errorText = await inventoryResponse.text();
+                console.error("Failed to delete from inventory:", errorText);
+                throw new Error("Inventory deletion failed: " + errorText);
+            }
         });
-
-        const delData = [{
-            productCode: sku
-        }];
-
-        console.log("Inside delete token: " + req.userData.token);
-
-        const inventoryResponse = await fetch(`https://inventory-service-inventory-service.2.rahtiapp.fi/inventory`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${req.userData.token}`
-            },
-            body: JSON.stringify(delData)
-        });
-
-        if (!inventoryResponse.ok) {
-            console.error("Failed to delete from inventory:", await inventoryResponse.text());
-            return res.status(500).json({ msg: "Produkten raderades, men inventory kunde inte uppdateras." });
-        }
 
         res.status(204).send();
     } catch (error) {
+        console.error("Transaction failed:", error.message);
         res.status(500).json({ msg: "Fel vid borttagning av produkt.", error: error.message });
     }
 });
+
 
 module.exports = router;
