@@ -1,6 +1,5 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
-const axios = require("axios");
 const authorizeAdmin = require("../middleware/authAdmin");
 const upload = require("../middleware/upload");
 const generateSKU = require("../middleware/generateSKU");
@@ -96,7 +95,7 @@ router.get("/:sku", async (req, res) => {
         }
 
         // Hämta saldo från inventory-service med SKU
-        const inventoryResp = await fetch(`https://inventory-service-inventory-service.2.rahtiapp.fi/inventory/${sku}`);
+        const inventoryResp = await fetch(`https://inventory-service-inventory-service.2.rahtiapp.fi/inventory/?productCodes=${sku}`);
 
         if (!inventoryResp.ok) {
             console.error("Misslyckades hämta saldo:", await inventoryResp.text());
