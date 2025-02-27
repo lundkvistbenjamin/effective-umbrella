@@ -142,12 +142,7 @@ router.get("/:sku", async (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               product_codes:
- *                 type: array
- *                 items:
- *                   type: string
+ *             $ref: '#/components/schemas/BatchRequest'
  *     responses:
  *       200:
  *         description: Successful response
@@ -159,12 +154,13 @@ router.get("/:sku", async (req, res) => {
  *                 products:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/BatchRequest'
+ *                     $ref: '#/components/schemas/Product'
  *       400:
  *         description: Invalid request. Missing or incorrect product codes.
  *       500:
  *         description: Error fetching products.
  */
+
 
 
 router.post("/batch", async (req, res) => {
@@ -178,7 +174,7 @@ router.post("/batch", async (req, res) => {
 
     try {
         const products = await prisma.products.findMany({
-            where: { sku: { in: product_codes } } 
+            where: { sku: { in: product_codes }     } 
         });
 
         res.json({ products });
