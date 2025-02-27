@@ -1,7 +1,7 @@
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const axios = require("axios");
-const authorize = require("../middleware/auth");
+const authorizeAdmin = require("../middleware/authAdmin");
 const upload = require("../middleware/upload");
 const generateSKU = require("../middleware/generateSKU");
 
@@ -114,13 +114,13 @@ router.get("/:sku", async (req, res) => {
             if (inventoryResp.ok) {
                 const inventory = await inventoryResp.json();
                 const stock = inventory.stock;
-                res.status(200).json({ msg: "Produkt hämtades.", product: { ...product, stock} });
+                res.status(200).json({ msg: "Produkt hämtades.", product: { ...product, stock } });
             } else {
-                console.error("Misslyckades hämta saldo:", await inventoryResp.text())
+                console.error("Misslyckades hämta saldo:", await inventoryResp.text());
                 return res.status(500).json({ msg: "Kunde inte hämta saldo." });
             }
-            
-            
+
+
         } else {
             res.status(404).json({ msg: "Produkten hittades inte." });
         }
@@ -147,7 +147,7 @@ router.get("/:sku", async (req, res) => {
  *       201:
  *         description: Product created
  */
-router.post("/", authorize, upload.single("image"), generateSKU(prisma), async (req, res) => {
+router.post("/", authorizeAdmin, upload.single("image"), generateSKU(prisma), async (req, res) => {
     try {
         const { name, price, description, country, category, stock } = req.body;
         const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
@@ -171,13 +171,13 @@ router.post("/", authorize, upload.single("image"), generateSKU(prisma), async (
         const invData = [{
             productCode: req.body.sku,
             stock: stock
-        }]
+        }];
 
         const inventoryResponse = await fetch("https://inventory-service-inventory-service.2.rahtiapp.fi/inventory", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${process.env.INV_TOKEN}`
+                "Authorization": `Bearer ${req.userData.token}`
             },
             body: JSON.stringify(invData),
         });
@@ -217,7 +217,7 @@ router.post("/", authorize, upload.single("image"), generateSKU(prisma), async (
  *       200:
  *         description: Product updated
  */
-router.put("/:sku", authorize, upload.single("image"), async (req, res) => {
+router.put("/:sku", authorizeAdmin, upload.single("image"), async (req, res) => {
     try {
         const { name, price, description } = req.body;
         const data = { updated_at: new Date() };
@@ -259,7 +259,7 @@ router.put("/:sku", authorize, upload.single("image"), async (req, res) => {
  *       204:
  *         description: Product deleted
  */
-router.delete("/:sku", authorize, async (req, res) => {
+router.delete("/:sku", authorizeAdmin, async (req, res) => {
     try {
 
         const { sku } = req.params;
@@ -270,13 +270,13 @@ router.delete("/:sku", authorize, async (req, res) => {
 
         const delData = [{
             productCode: sku
-        }]
+        }];
 
         const inventoryResponse = await fetch(`https://inventory-service-inventory-service.2.rahtiapp.fi/inventory/`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${process.env.INV_TOKEN}`
+                "Authorization": `Bearer ${req.userData.token}`
             },
             body: JSON.stringify(delData)
         });
