@@ -264,8 +264,6 @@ router.delete("/:sku", authorizeAdmin, async (req, res) => {
 
     const delData = [{ productCode: sku }];
 
-    console.log("Inside delete token: " + req.userData.token);
-
     try {
         await prisma.$transaction(async (tx) => {
             // Delete product from the database
@@ -274,7 +272,7 @@ router.delete("/:sku", authorizeAdmin, async (req, res) => {
             });
 
             // Delete from inventory
-            const inventoryResponse = await fetch("https://inventory-service-inventory-service.2.rahtiapp.fi/inventory/", {
+            const inventoryResponse = await fetch("https://inventory-service-inventory-service.2.rahtiapp.fi/inventory", {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
