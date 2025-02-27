@@ -131,6 +131,62 @@ router.get("/:sku", async (req, res) => {
 
 /**
  * @swagger
+ * /products/batch:
+ *   post:
+ *     summary: Get multiple products by a list of SKUs
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               product_codes:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 products:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/BatchRequest'
+ *       400:
+ *         description: Invalid request. Missing or incorrect product codes.
+ *       500:
+ *         description: Error fetching products.
+ */
+
+
+router.get("/batch", async (req, res) => {
+    const { product_codes } = req.body;
+
+    if (!Array.isArray(product_codes) || product_codes.length === 0) {
+        return res.status(400).json({ error: "Skicka en lista." });
+    }
+
+    try {
+        const products = await prisma.product.findMany({
+            where: { sku: { in: product_codes } } 
+        });
+
+        res.json({ products });
+    } catch (error) {
+        res.status(500).json({ error: "Error fetching products" });
+    }
+})
+
+/**
+ * @swagger
  * /products:
  *   post:
  *     summary: Add a new product

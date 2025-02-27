@@ -39,5 +39,17 @@ module.exports = {
             country: { type: "string", example: "Finland" },
             category: { type: "string", example: "Pale Ale" }
         }
+    },
+
+    BatchRequest: {
+        type: "object",
+        properties: {
+            product_codes: {
+                type: "array",
+                items: { type: "string" },
+                example: ["SKU123", "SKU456", "SKU789"]
+            }
+        },
+        required: ["product_codes"]
     }
 };
