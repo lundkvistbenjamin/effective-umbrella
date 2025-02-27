@@ -1,8 +1,8 @@
 const multer = require("multer");
 const path = require("path");
 
-// Define the upload folder (mounted PVC)
-const uploadFolder = "/app/uploads";  // This is mounted in the pod
+// Upload katalog (mounted PVC)
+const uploadFolder = "/app/uploads";
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {

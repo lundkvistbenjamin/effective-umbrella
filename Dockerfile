@@ -18,7 +18,7 @@ COPY . .
 
 # Ensure correct permissions for OpenShift (Writable Prisma)
 # Uncomment when running "npx prisma db pull" in pod terminal for example
-#RUN chmod -R 777 /app/prisma
+# RUN chmod -R 777 /app/prisma
 
 # Generate Prisma client
 RUN npx prisma generate

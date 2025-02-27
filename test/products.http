@@ -6,8 +6,8 @@ GET {{apiURL}}products
 Authorization: Bearer {{authToken}}
 
 ### Hämta en specifik produkt (Require Auth)
-GET {{apiURL}}products/{sku}
-Authorization: {{authToken}}
+GET {{apiURL}}products/785-GFI
+Authorization: Bearer {{authToken}}
 
 ### Lägg till en ny produkt (Require Auth)
 POST {{apiURL}}products
@@ -15,15 +15,16 @@ Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
 {
-    "sku": "785-GFI",
-    "name": "IPA",
-    "price": 62.99,
-    "description": "En kraftig och humlearomatisk IPA.",
+    "country": "Finland",
+    "category": "Lager",
+    "name": "Lapin Kulta",
+    "price": 1,
+    "description": "Ugh.",
     "image": "path-to-image"
 }
 
 ### Uppdatera en produkt (Require Auth)
-PUT {{apiURL}}products/{id}
+PUT {{apiURL}}products/10000-FIL
 Authorization: Bearer {{authToken}}
 Content-Type: application/json
 
@@ -33,5 +34,5 @@ Content-Type: application/json
 }
 
 ### Ta bort en produkt (Require Auth)
-DELETE {{apiURL}}products/4
+DELETE {{apiURL}}products/10000-MXL
 Authorization: Bearer {{authToken}}
