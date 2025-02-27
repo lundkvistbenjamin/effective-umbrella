@@ -41,16 +41,15 @@ module.exports = {
         }
     },
 
-    BatchRequest: {
+     BatchRequest: {
         type: "object",
         properties: {
             product_codes: {
                 type: "array",
                 items: {
-                    type: "string",
-                    example: "SKU123"  
+                    type: "string"
                 },
-                example: ["SKU123", "SKU456", "SKU789"] 
+                example: ["SKU123", "SKU456", "SKU789"]
             }
         },
         required: ["product_codes"]
