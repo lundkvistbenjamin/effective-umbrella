@@ -46,8 +46,11 @@ module.exports = {
         properties: {
             product_codes: {
                 type: "array",
-                items: { type: "string" },
-                example: ["SKU123", "SKU456", "SKU789"]
+                items: {
+                    type: "string",
+                    example: "SKU123"  
+                },
+                example: ["SKU123", "SKU456", "SKU789"] 
             }
         },
         required: ["product_codes"]
