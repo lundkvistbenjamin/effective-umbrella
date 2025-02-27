@@ -49,7 +49,7 @@ module.exports = {
                 items: {
                     type: "string"
                 },
-                example: ["SKU123", "SKU456", "SKU789"]
+                example: ["10000-FIL", "10000-FII", "10000-MXL"]
             }
         },
         required: ["product_codes"]
