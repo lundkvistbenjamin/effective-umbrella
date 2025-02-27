@@ -9,16 +9,16 @@ module.exports = (req, res, next) => {
         }
 
         console.log(`Authorize jwt: ${authHeader}`);
-        const token = authHeader.split(" ")[1]; // Extract token
+        const token = authHeader.split(" ")[1]; // Extrahera token
 
-        // Verify JWT
+        // Verifiera JWT
         const userData = jwt.verify(token, process.env.JWT_SECRET);
         console.log(`Token godkänd för användare ${userData.sub} ${userData.name}`);
 
-        // Attach token to userData
+        // Lägg till token till userData
         req.userData = { ...userData, token };
 
-        // Check admin role
+        // Kolla admin rollen
         if (userData.role !== "admin") {
             return res.status(403).json({ message: "Du har inte tillgång. Endast admins!" });
         }
