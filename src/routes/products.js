@@ -174,6 +174,8 @@ router.post("/batch", async (req, res) => {
         return res.status(400).json({ error: "Skicka en lista." });
     }
 
+    console.log("Product Codes:", product_codes);
+
     try {
         const products = await prisma.product.findMany({
             where: { sku: { in: product_codes } } 
@@ -181,6 +183,7 @@ router.post("/batch", async (req, res) => {
 
         res.json({ products });
     } catch (error) {
+        console.error(error)
         res.status(500).json({ error: "Error fetching products" });
     }
 })
