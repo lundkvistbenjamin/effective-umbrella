@@ -102,8 +102,10 @@ router.get("/:sku", async (req, res) => {
             return res.status(500).json({ msg: "Kunde inte hämta saldo." });
         }
 
-        const { stock } = await inventoryResp.json();
-        res.status(200).json({ msg: "Produkt hämtades.", product: { ...product, stock } });
+        const inventoryData = await inventoryResp.json();
+        const inventory = inventoryData.find(item => item.productCode === sku);
+
+        res.status(200).json({ msg: "Produkt hämtades.", product: { ...product, stock: inventory ? inventory.stock : 0 } });
 
     } catch (error) {
         res.status(500).json({ msg: "Fel vid hämtning av produkt.", error: error.message });
