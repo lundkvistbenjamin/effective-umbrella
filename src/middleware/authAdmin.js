@@ -9,24 +9,25 @@ module.exports = (req, res, next) => {
         }
 
         console.log(`Authorize jwt: ${authHeader}`);
-        const token = authHeader?.split(" ")[1];
+        const token = authHeader.split(" ")[1]; // Extract token
 
-        // Verifiera JWT
+        // Verify JWT
         const userData = jwt.verify(token, process.env.JWT_SECRET);
-        console.log(`Token goodkänd för användare ${userData.sub} ${userData.name}`);
+        console.log(`Token godkänd för användare ${userData.sub} ${userData.name}`);
 
-        // Kolla om user är admin
+        // Attach token to userData
+        req.userData = { ...userData, token };
+
+        // Check admin role
         if (userData.role !== "admin") {
             return res.status(403).json({ message: "Du har inte tillgång. Endast admins!" });
         }
 
-        // Annars returnar vi de
-        req.userData = userData;
+        console.log("Inside middleware, token: " + req.userData.token);
         next();
 
     } catch (error) {
         console.log(error.message);
-
         res.status(401).send({
             message: "Token inte godkänd!",
             error: error.message

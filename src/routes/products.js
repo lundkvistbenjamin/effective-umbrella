@@ -173,8 +173,6 @@ router.post("/", authorizeAdmin, upload.single("image"), generateSKU(prisma), as
             stock: stock
         }];
 
-        console.log(req.userData.token);
-
         const inventoryResponse = await fetch("https://inventory-service-inventory-service.2.rahtiapp.fi/inventory", {
             method: "POST",
             headers: {
@@ -183,8 +181,6 @@ router.post("/", authorizeAdmin, upload.single("image"), generateSKU(prisma), as
             },
             body: JSON.stringify(invData),
         });
-
-        console.log(req.userData.token);
 
         if (!inventoryResponse.ok) {
             console.error("Misslyckades uppdatera inventory:", await inventoryResponse.text());
