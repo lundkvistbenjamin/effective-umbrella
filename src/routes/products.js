@@ -167,7 +167,7 @@ router.get("/:sku", async (req, res) => {
  */
 
 
-router.get("/batch", async (req, res) => {
+router.post("/batch", async (req, res) => {
     const { product_codes } = req.body;
 
     if (!Array.isArray(product_codes) || product_codes.length === 0) {
