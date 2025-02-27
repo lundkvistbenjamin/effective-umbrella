@@ -211,7 +211,7 @@ router.post("/", authorizeAdmin, upload.single("image"), generateSKU(prisma), as
             });
 
             // Skapa produkt i inventory-service
-            const inventoryResponse = await fetch("https://inventory-service-inventory-service.2.rahtiapp.fi/inventory", {
+            const inventoryResp = await fetch("https://inventory-service-inventory-service.2.rahtiapp.fi/inventory", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -220,8 +220,8 @@ router.post("/", authorizeAdmin, upload.single("image"), generateSKU(prisma), as
                 body: JSON.stringify(inventoryData),
             });
 
-            if (!inventoryResponse.ok) {
-                throw new Error(await inventoryResponse.text());
+            if (!inventoryResp.ok) {
+                throw new Error(await inventoryResp.text());
             }
 
             return product;
@@ -307,7 +307,7 @@ router.delete("/:sku", authorizeAdmin, async (req, res) => {
         await prisma.$transaction(async (tx) => {
             await tx.products.delete({ where: { sku } });
 
-            const inventoryResponse = await fetch("https://inventory-service-inventory-service.2.rahtiapp.fi/inventory", {
+            const inventoryResp = await fetch("https://inventory-service-inventory-service.2.rahtiapp.fi/inventory", {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
@@ -316,8 +316,8 @@ router.delete("/:sku", authorizeAdmin, async (req, res) => {
                 body: JSON.stringify([{ productCode: sku }])
             });
 
-            if (!inventoryResponse.ok) {
-                throw new Error(await inventoryResponse.text());
+            if (!inventoryResp.ok) {
+                throw new Error(await inventoryResp.text());
             }
         });
 
