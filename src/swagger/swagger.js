@@ -28,6 +28,7 @@ const options = {
                 Product,
                 CreateProduct,
                 UpdateProduct,
+                BatchRequest
             }
         },
         security: [{ bearerAuth: [] }],
