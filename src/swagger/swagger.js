@@ -1,6 +1,6 @@
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
-const { Product, CreateProduct, UpdateProduct } = require("./schemas/Product.js");
+const { Product, CreateProduct, UpdateProduct, BatchRequest } = require("./schemas/Product.js");
 
 const options = {
     definition: {
