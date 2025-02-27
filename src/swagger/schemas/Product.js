@@ -41,7 +41,7 @@ module.exports = {
         }
     },
 
-     BatchRequest: {
+    BatchRequest: {
         type: "object",
         properties: {
             product_codes: {
