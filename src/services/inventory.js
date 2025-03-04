@@ -1,11 +1,21 @@
 const INVENTORY_URL = process.env.INVENTORY_URL;
 
-const fetchInventory = async (productCodes) => {
+const fetchAllInventory = async () => {
+    const inventoryResp = await fetch(`${INVENTORY_URL}`);
+
+    if (!inventoryResp.ok) {
+        throw new Error(`Failed to fetch all inventory: ${await inventoryResp.text()}`);
+    }
+
+    return inventoryResp.json();
+};
+
+const fetchInventoryBatch = async (productCodes) => {
     const queryString = productCodes.map(code => `productCodes=${code}`).join("&");
     const inventoryResp = await fetch(`${INVENTORY_URL}?${queryString}`);
 
     if (!inventoryResp.ok) {
-        throw new Error(`Failed to fetch inventory: ${await inventoryResp.text()}`);
+        throw new Error(`Failed to fetch inventory batch: ${await inventoryResp.text()}`);
     }
 
     return inventoryResp.json();
@@ -53,7 +63,8 @@ const deleteInventory = async (token, inventoryData) => {
 };
 
 module.exports = {
-    fetchInventory,
+    fetchAllInventory,
+    fetchInventoryBatch,
     fetchInventoryBySKU,
     createInventory,
     deleteInventory

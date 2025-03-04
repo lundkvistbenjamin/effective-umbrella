@@ -3,7 +3,7 @@ const { PrismaClient } = require("@prisma/client");
 const authorizeAdmin = require("../middleware/authAdmin");
 const upload = require("../middleware/upload");
 const generateSKU = require("../middleware/generateSKU");
-const { fetchInventory, fetchInventoryBySKU, createInventory, deleteInventory } = require("../services/inventory");
+const { fetchAllInventory, fetchInventoryBatch, fetchInventoryBySKU, createInventory, deleteInventory } = require("../services/inventory");
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -35,9 +35,13 @@ const prisma = new PrismaClient();
  */
 router.get("/", async (req, res) => {
     try {
+        // Hämta produkter från databasen
         const products = await prisma.products.findMany();
-        const inventoryData = await fetchInventory(products.map(product => product.sku));
 
+        // Hämta saldo från inventory-service
+        const inventoryData = await fetchAllInventory();
+
+        // Kombinera produkter med saldo
         const productsWithInventory = products.map(product => {
             const inventory = inventoryData.find(item => item.productCode === product.sku);
             return { ...product, stock: inventory ? inventory.stock : 0 };
@@ -45,6 +49,7 @@ router.get("/", async (req, res) => {
 
         res.status(200).json({ msg: "Produkter hämtades.", products: productsWithInventory });
     } catch (error) {
+        console.error("Fel vid hämtning av produkter:", error.message);
         res.status(500).json({ msg: "Fel vid hämtning av produkter.", error: error.message });
     }
 });
@@ -82,7 +87,7 @@ router.get("/:sku", async (req, res) => {
             return res.status(404).json({ msg: "Produkten hittades inte." });
         }
 
-        const inventory = await fetchInventoryBySKU(sku);
+        const inventory = await fetchInventoryBatch([sku]);
         res.status(200).json({ msg: "Produkt hämtades.", product: { ...product, stock: inventory ? inventory.stock : 0 } });
 
     } catch (error) {
@@ -133,7 +138,7 @@ router.post("/batch", async (req, res) => {
             where: { sku: { in: product_codes } }
         });
 
-        const inventoryData = await fetchInventory(product_codes);
+        const inventoryData = await fetchInventoryBatch(product_codes);
 
         const productsWithInventory = products.map(product => {
             const inventory = inventoryData.find(item => item.productCode === product.sku);
@@ -181,7 +186,7 @@ router.post("/", authorizeAdmin, upload.single("image"), generateSKU(prisma), as
                 data: { sku, name, price, description, image: imagePath, country, category }
             });
 
-            await updateInventory(req.userData.token, inventoryData);
+            await createInventory(req.userData.token, inventoryData);
             return product;
         });
 
