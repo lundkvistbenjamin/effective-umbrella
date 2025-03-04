@@ -26,7 +26,7 @@ const fetchInventoryBySKU = async (productCode) => {
 // Hämta flera items från inventory-service
 const fetchInventoryBatch = async (productCodes) => {
     const queryString = productCodes.map(code => `productCodes=${code}`).join("&");
-    const inventoryResp = await fetch(`${INVENTORY_URL}?${queryString}`);
+    const inventoryResp = await fetch(`${INVENTORY_URL}/?${queryString}`);
 
     console.log(`${INVENTORY_URL}/?${queryString}`);
 
