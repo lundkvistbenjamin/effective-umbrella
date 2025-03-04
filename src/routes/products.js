@@ -3,7 +3,7 @@ const { PrismaClient } = require("@prisma/client");
 const authorizeAdmin = require("../middleware/authAdmin");
 const upload = require("../middleware/upload");
 const generateSKU = require("../middleware/generateSKU");
-const { fetchAllInventory, fetchInventoryBatch, createInventory, deleteInventory } = require("../services/inventory");
+const { fetchAllInventory, fetchInventoryBySKU, fetchInventoryBatch, createInventory, deleteInventory } = require("../services/inventory");
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -89,10 +89,10 @@ router.get("/:sku", async (req, res) => {
         }
 
         // Hämta saldo från inventory-service med SKU
-        const inventory = await fetchInventoryBatch([sku]);
-        console.log(inventory);
-        console.log(sku);
-        console.log([sku]);
+        const inventoryData = await fetchInventoryBatch([sku]);
+
+        console.log(inventoryData);
+        const inventory = inventoryData[0];
 
         res.status(200).json({ msg: "Produkt hämtades.", product: { ...product, stock: inventory ? inventory.stock : 0 } });
     } catch (error) {
