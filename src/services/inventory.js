@@ -32,6 +32,7 @@ const fetchInventoryBatch = async (productCodes) => {
         throw new Error(`Failed to fetch inventory batch: ${await inventoryResp.text()}`);
     }
 
+    console.log(inventoryResp.json());
     return inventoryResp.json();
 };
 
