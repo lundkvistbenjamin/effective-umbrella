@@ -23,9 +23,9 @@ const fetchInventoryBySKU = async (productCode) => {
     return inventoryData.find(item => item.productCode === productCode);
 };
 
-// Hämta flera items från inventory-service
 const fetchInventoryBatch = async (productCodes) => {
     const queryString = productCodes.map(code => `productCodes=${code}`).join("&");
+    console.log(`Fetching inventory for: ${queryString}`); // Debug log
     const inventoryResp = await fetch(`${INVENTORY_URL}?${queryString}`);
 
     if (!inventoryResp.ok) {
