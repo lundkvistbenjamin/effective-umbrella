@@ -1,5 +1,6 @@
 const INVENTORY_URL = process.env.INVENTORY_URL;
 
+// Hämta all information från inventory-sercvice
 const fetchAllInventory = async () => {
     const inventoryResp = await fetch(`${INVENTORY_URL}`);
 
@@ -10,6 +11,7 @@ const fetchAllInventory = async () => {
     return inventoryResp.json();
 };
 
+// Hämta en eller flera items från inventory-sercvice
 const fetchInventoryBatch = async (productCodes) => {
     const queryString = productCodes.map(code => `productCodes=${code}`).join("&");
     const inventoryResp = await fetch(`${INVENTORY_URL}?${queryString}`);
@@ -21,17 +23,7 @@ const fetchInventoryBatch = async (productCodes) => {
     return inventoryResp.json();
 };
 
-const fetchInventoryBySKU = async (productCode) => {
-    const inventoryResp = await fetch(`${INVENTORY_URL}/?productCodes=${productCode}`);
-
-    if (!inventoryResp.ok) {
-        throw new Error(`Failed to fetch inventory: ${await inventoryResp.text()}`);
-    }
-
-    const inventoryData = await inventoryResp.json();
-    return inventoryData.find(item => item.productCode === productCode);
-};
-
+// Skapa ny produktdata i inventory-sercvice
 const createInventory = async (token, inventoryData) => {
     const inventoryResp = await fetch(`${INVENTORY_URL}`, {
         method: "POST",
@@ -47,6 +39,7 @@ const createInventory = async (token, inventoryData) => {
     }
 };
 
+// Ta bort en item från inventory-sercvice
 const deleteInventory = async (token, inventoryData) => {
     const inventoryResp = await fetch(`${INVENTORY_URL}`, {
         method: "DELETE",
@@ -65,7 +58,6 @@ const deleteInventory = async (token, inventoryData) => {
 module.exports = {
     fetchAllInventory,
     fetchInventoryBatch,
-    fetchInventoryBySKU,
     createInventory,
     deleteInventory
 };
