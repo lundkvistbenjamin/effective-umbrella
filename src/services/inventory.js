@@ -11,7 +11,19 @@ const fetchAllInventory = async () => {
     return inventoryResp.json();
 };
 
-// Hämta en eller flera items från inventory-sercvice
+// Hämta en item från inventory-service
+const fetchInventoryBySKU = async (productCode) => {
+    const inventoryResp = await fetch(`${INVENTORY_URL}/?productCodes=${productCode}`);
+
+    if (!inventoryResp.ok) {
+        throw new Error(`Failed to fetch inventory: ${await inventoryResp.text()}`);
+    }
+
+    const inventoryData = await inventoryResp.json();
+    return inventoryData.find(item => item.productCode === productCode);
+};
+
+// Hämta flera items från inventory-service
 const fetchInventoryBatch = async (productCodes) => {
     const queryString = productCodes.map(code => `productCodes=${code}`).join("&");
     const inventoryResp = await fetch(`${INVENTORY_URL}?${queryString}`);
