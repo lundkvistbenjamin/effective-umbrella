@@ -90,9 +90,7 @@ router.get("/:sku", async (req, res) => {
 
         // Hämta saldo från inventory-service med SKU
         const inventoryData = await fetchInventoryBatch([sku]);
-        console.log(inventoryData);
-
-        const inventory = inventoryData[0];
+        const inventory = inventoryData.find(item => item.productCode === sku);
 
         res.status(200).json({ msg: "Produkt hämtades.", product: { ...product, stock: inventory ? inventory.stock : 0 } });
     } catch (error) {
@@ -147,7 +145,6 @@ router.post("/batch", async (req, res) => {
 
         // Hämta saldo från inventory-service med SKU array
         const inventoryData = await fetchInventoryBatch(product_codes);
-        console.log(inventoryData);
 
         // Kombinera produkter med saldo
         const productsWithInventory = products.map(product => {
