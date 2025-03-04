@@ -28,13 +28,10 @@ const fetchInventoryBatch = async (productCodes) => {
     const queryString = productCodes.map(code => `productCodes=${code}`).join("&");
     const inventoryResp = await fetch(`${INVENTORY_URL}/?${queryString}`);
 
-    console.log(`${INVENTORY_URL}/?${queryString}`);
-
     if (!inventoryResp.ok) {
         throw new Error(`Failed to fetch inventory batch: ${await inventoryResp.text()}`);
     }
 
-    console.log(inventoryResp.json());
     return inventoryResp.json();
 };
 
